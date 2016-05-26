@@ -1,0 +1,10 @@
+language: java
+jdk:
+- oraclejdk8
+cache:
+  directories:
+  - "$HOME/.m2/repository"
+branches:
+  only:
+  - master
+  - "/^iterator-fixtures-[0-9]+\\.[0-9]+\\.[0-9]+/"
