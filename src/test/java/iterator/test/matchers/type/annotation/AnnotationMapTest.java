@@ -3,13 +3,13 @@ package iterator.test.matchers.type.annotation;
 
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.*;
+import static org.hamcrest.Matchers.nullValue;
+import static org.junit.Assert.assertThat;
+import iterator.Reflection;
 
 import java.lang.annotation.Annotation;
 
 import org.junit.Test;
-
-import iterator.Reflection;
 
 public class AnnotationMapTest {
 
@@ -197,6 +197,26 @@ public class AnnotationMapTest {
         AnnotationMap<TestAnnotationWithoutValue> map = AnnotationMap.of(annotation);
         // when
         map.set("stringProperty", true);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void shouldThrowGivenNullForNonNullableTypeWhenSet() throws Exception {
+        // given
+        TestAnnotationWithoutValue annotation = anno("annotatedWithOverrides", TestAnnotationWithoutValue.class);
+        AnnotationMap<TestAnnotationWithoutValue> map = AnnotationMap.of(annotation);
+        // when
+        map.set("booleanProperty", null);
+    }
+
+    @Test
+    public void shouldNotThrowGivenNullForNullableTypeWhenSet() throws Exception {
+        // given
+        TestAnnotationWithoutValue annotation = anno("annotatedWithOverrides", TestAnnotationWithoutValue.class);
+        AnnotationMap<TestAnnotationWithoutValue> map = AnnotationMap.of(annotation);
+        // when
+        AnnotationMap<TestAnnotationWithoutValue> actual = map.set("stringProperty", null);
+        // then
+        assertThat(actual.get("stringProperty", String.class), nullValue());
     }
 
     @Test
