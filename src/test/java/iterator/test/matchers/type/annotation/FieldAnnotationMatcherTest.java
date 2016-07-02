@@ -18,7 +18,7 @@ public class FieldAnnotationMatcherTest {
     @TestAnnotationWithValue("foo")
     private Object matchingSimpleAnnotation;
 
-    private String noTestAnnotation;
+    String noTestAnnotation;
 
     @Test
     public void shouldMatchSimpleAnnotationWithValue() throws Exception {
