@@ -9,7 +9,7 @@
 		<version>1.3.0</version>
 	</parent>
 
-	<name>JPA Matchers</name>
+	<name>Type Matchers</name>
 	<url>${scm.https.home}</url>
 	<inceptionYear>2016</inceptionYear>
 	<scm>
