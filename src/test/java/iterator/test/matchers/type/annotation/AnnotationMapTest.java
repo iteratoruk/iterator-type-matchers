@@ -94,6 +94,9 @@ public class AnnotationMapTest {
     @TestAnnotationWithValue("bar")
     private String annotationWithValue;
 
+    @TestAnnotationWithNullArrayDefault({ String.class, Integer.class, Boolean.class })
+    private String annotationWithNullArrayDefault;
+
     @Test
     public void shouldReturnAnnotationClassWhenAnnotationMapOfAnnotationInstance() throws Exception {
         // given
@@ -261,6 +264,17 @@ public class AnnotationMapTest {
         String actual = map.toString();
         // then
         assertThat(actual, is("@TestAnnotationWithoutValue(stringArrayProperty = { \"foo\", \"bar\", \"baz\" })"));
+    }
+
+    @Test
+    public void shouldReturnAnnotationSyntaxWithStringArrayPropertyValueGivenDefaultIsNullWhenToString() throws Exception {
+        // given
+        TestAnnotationWithNullArrayDefault annotation = anno("annotationWithNullArrayDefault", TestAnnotationWithNullArrayDefault.class);
+        AnnotationMap<TestAnnotationWithNullArrayDefault> map = AnnotationMap.of(annotation);
+        // when
+        String actual = map.toString();
+        // then
+        assertThat(actual, is("@TestAnnotationWithNullArrayDefault({ String.class, Integer.class, Boolean.class })"));
     }
 
     @Test

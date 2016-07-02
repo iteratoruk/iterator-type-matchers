@@ -10,10 +10,8 @@ import java.lang.annotation.Target;
 
 @Target({ METHOD, FIELD })
 @Retention(RUNTIME)
-public @interface TestAnnotationWithValue {
+public @interface TestAnnotationWithNullArrayDefault {
 
-    String value();
-
-    String anotherProperty() default "bar";
+    Class<?>[] value();
 
 }

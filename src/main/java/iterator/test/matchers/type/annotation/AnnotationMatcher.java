@@ -36,7 +36,8 @@ public abstract class AnnotationMatcher<A extends Annotation, T> extends TypeSaf
 
     @Override
     protected final void describeMismatchSafely(Class<T> item, Description mismatchDescription) {
-        AnnotationMap<A> map = AnnotationMap.of(findAnnotation(item));
+        A anno = findAnnotation(item);
+        Object map = anno != null ? AnnotationMap.of(anno) : null;
         mismatchDescription.appendText(String.valueOf(map));
     }
 
@@ -48,7 +49,8 @@ public abstract class AnnotationMatcher<A extends Annotation, T> extends TypeSaf
 
     @Override
     protected final boolean matchesSafely(Class<T> item) {
-        return expected.equals(AnnotationMap.of(findAnnotation(item)));
+        A anno = findAnnotation(item);
+        return anno == null ? expected == null : expected.equals(AnnotationMap.of(anno));
     }
 
 }

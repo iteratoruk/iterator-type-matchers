@@ -18,6 +18,8 @@ public class FieldAnnotationMatcherTest {
     @TestAnnotationWithValue("foo")
     private Object matchingSimpleAnnotation;
 
+    private String noTestAnnotation;
+
     @Test
     public void shouldMatchSimpleAnnotationWithValue() throws Exception {
         assertThat(FieldAnnotationMatcherTest.class, hasFieldAnnotation("matchingSimpleAnnotation", AnnotationMap.from(TestAnnotationWithValue.class).set("value", "foo")));
@@ -26,6 +28,11 @@ public class FieldAnnotationMatcherTest {
     @Test(expected = AssertionError.class)
     public void shouldNotMatchSimpleAnnotationWithValue() throws Exception {
         assertThat(FieldAnnotationMatcherTest.class, hasFieldAnnotation("matchingSimpleAnnotation", AnnotationMap.from(TestAnnotationWithValue.class).set("value", "bar")));
+    }
+
+    @Test(expected = AssertionError.class)
+    public void shouldNotMatchUnannotatedField() throws Exception {
+        assertThat(FieldAnnotationMatcherTest.class, hasFieldAnnotation("noTestAnnotation", AnnotationMap.from(TestAnnotationWithValue.class)));
     }
 
 }

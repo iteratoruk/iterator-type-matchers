@@ -100,7 +100,7 @@ public final class AnnotationMap<A extends Annotation> {
 
         @Override
         public boolean isDefault() {
-            return def == null && value != null || Arrays.equals(def, value);
+            return def == null && value == null || Arrays.equals(def, value);
         }
 
         @Override
