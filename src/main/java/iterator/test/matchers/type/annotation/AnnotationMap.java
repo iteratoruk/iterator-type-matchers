@@ -35,10 +35,13 @@ import java.util.StringJoiner;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
+// FIXME primitive annotation member default value can be null when no default specified
 @SuppressWarnings({ "unchecked", "rawtypes" })
 public final class AnnotationMap<A extends Annotation> {
 
     public static abstract class MemberValue<T> {
+
+        private static final String UNDEFINED = "UNDEFINED";
 
         protected final T def;
 
@@ -47,6 +50,14 @@ public final class AnnotationMap<A extends Annotation> {
         protected T value;
 
         private final boolean nullable;
+
+        protected MemberValue(Class<T> type, boolean nullable) {
+            this(null, null, type, nullable);
+        }
+
+        protected MemberValue(T value, Class<T> type, boolean nullable) {
+            this(value, null, type, nullable);
+        }
 
         protected MemberValue(T value, T def, Class<T> type, boolean nullable) {
             this.value = value;
@@ -74,7 +85,11 @@ public final class AnnotationMap<A extends Annotation> {
         }
 
         public boolean isDefault() {
-            return def == null && value == null || def != null && def.equals(value);
+            return def != null && value != null && def.equals(value);
+        }
+
+        public boolean isUndefined() {
+            return def == null && value == null;
         }
 
         public boolean isNullable() {
@@ -83,7 +98,7 @@ public final class AnnotationMap<A extends Annotation> {
 
         @Override
         public String toString() {
-            return String.valueOf(value);
+            return isUndefined() ? UNDEFINED : String.valueOf(value);
         }
 
         void setValue(T value) {
@@ -162,6 +177,14 @@ public final class AnnotationMap<A extends Annotation> {
 
     static final class BooleanMemberValue extends ObjectMemberValue<Boolean> {
 
+        BooleanMemberValue() {
+            super(Boolean.class, false);
+        }
+
+        BooleanMemberValue(boolean value) {
+            super(Boolean.valueOf(value), Boolean.class, false);
+        }
+
         BooleanMemberValue(boolean value, boolean def) {
             super(Boolean.valueOf(value), Boolean.valueOf(def), Boolean.class, false);
         }
@@ -177,6 +200,14 @@ public final class AnnotationMap<A extends Annotation> {
     }
 
     static final class ByteMemberValue extends ObjectMemberValue<Byte> {
+
+        ByteMemberValue() {
+            super(Byte.class, false);
+        }
+
+        ByteMemberValue(byte value) {
+            super(Byte.valueOf(value), Byte.class, false);
+        }
 
         ByteMemberValue(byte value, byte def) {
             super(Byte.valueOf(value), Byte.valueOf(def), Byte.class, false);
@@ -199,13 +230,21 @@ public final class AnnotationMap<A extends Annotation> {
 
     static final class CharMemberValue extends ObjectMemberValue<Character> {
 
+        CharMemberValue() {
+            super(Character.class, false);
+        }
+
+        CharMemberValue(char value) {
+            super(Character.valueOf(value), Character.class, false);
+        }
+
         CharMemberValue(char value, char def) {
             super(Character.valueOf(value), Character.valueOf(def), Character.class, false);
         }
 
         @Override
         public String toString() {
-            return singleQuoted(value);
+            return value != null ? singleQuoted(value) : super.toString();
         }
 
     }
@@ -245,6 +284,14 @@ public final class AnnotationMap<A extends Annotation> {
     }
 
     static final class DoubleMemberValue extends ObjectMemberValue<Double> {
+
+        DoubleMemberValue() {
+            super(Double.class, false);
+        }
+
+        DoubleMemberValue(double value) {
+            super(Double.valueOf(value), Double.class, false);
+        }
 
         DoubleMemberValue(double value, double def) {
             super(Double.valueOf(value), Double.valueOf(def), Double.class, false);
@@ -293,13 +340,21 @@ public final class AnnotationMap<A extends Annotation> {
 
     static final class FloatMemberValue extends ObjectMemberValue<Float> {
 
+        FloatMemberValue() {
+            super(Float.class, false);
+        }
+
+        FloatMemberValue(float value) {
+            super(Float.valueOf(value), Float.class, false);
+        }
+
         FloatMemberValue(float value, float def) {
             super(Float.valueOf(value), Float.valueOf(def), Float.class, false);
         }
 
         @Override
         public String toString() {
-            return suffixed(value, F);
+            return value != null ? suffixed(value, F) : super.toString();
         }
 
     }
@@ -313,6 +368,14 @@ public final class AnnotationMap<A extends Annotation> {
     }
 
     static final class IntMemberValue extends ObjectMemberValue<Integer> {
+
+        IntMemberValue() {
+            super(Integer.class, false);
+        }
+
+        IntMemberValue(int value) {
+            super(Integer.valueOf(value), Integer.class, false);
+        }
 
         IntMemberValue(int value, int def) {
             super(Integer.valueOf(value), Integer.valueOf(def), Integer.class, false);
@@ -330,6 +393,14 @@ public final class AnnotationMap<A extends Annotation> {
 
     static final class LongMemberValue extends ObjectMemberValue<Long> {
 
+        LongMemberValue() {
+            super(Long.class, false);
+        }
+
+        LongMemberValue(long value) {
+            super(Long.valueOf(value), Long.class, false);
+        }
+
         LongMemberValue(long value, long def) {
             super(Long.valueOf(value), Long.valueOf(def), Long.class, false);
         }
@@ -346,6 +417,14 @@ public final class AnnotationMap<A extends Annotation> {
 
     static class ObjectMemberValue<T extends Object> extends MemberValue<T> {
 
+        ObjectMemberValue(Class<T> type, boolean nullable) {
+            super(type, nullable);
+        }
+
+        ObjectMemberValue(T value, Class<T> type, boolean nullable) {
+            super(value, type, nullable);
+        }
+
         ObjectMemberValue(T value, T def, Class<T> type, boolean nullable) {
             super(value, def, type, nullable);
         }
@@ -361,6 +440,14 @@ public final class AnnotationMap<A extends Annotation> {
     }
 
     static final class ShortMemberValue extends ObjectMemberValue<Short> {
+
+        ShortMemberValue() {
+            super(Short.class, false);
+        }
+
+        ShortMemberValue(short value) {
+            super(Short.valueOf(value), Short.class, false);
+        }
 
         ShortMemberValue(short value, short def) {
             super(Short.valueOf(value), Short.valueOf(def), Short.class, false);
@@ -389,7 +476,7 @@ public final class AnnotationMap<A extends Annotation> {
 
         @Override
         public String toString() {
-            return doubleQuoted(value);
+            return value != null ? doubleQuoted(value) : super.toString();
         }
 
     }
@@ -398,288 +485,368 @@ public final class AnnotationMap<A extends Annotation> {
         ANNOTATION {
 
             @Override
-            boolean isValueType(Object value, Object def, Class<?> type) {
-                return type != null && type.isAnnotation();
+            boolean isValueType(Class<?> type) {
+                return type.isAnnotation();
             }
 
             @Override
-            MemberValue<?> newMemberValue(Object value, Object def, Class<?> type) {
+            MemberValue<?> newMemberValueWithValueAndDefault(Object value, Object def, Class<?> type) {
                 return new AnnotationMemberValue<>((Annotation) value, (Annotation) def, (Class<Annotation>) type);
             }
         },
         ANNOTATION_ARRAY {
 
             @Override
-            boolean isValueType(Object value, Object def, Class<?> type) {
-                return type != null && type.isArray() && type.getComponentType().isAnnotation();
+            boolean isValueType(Class<?> type) {
+                return type.isArray() && type.getComponentType().isAnnotation();
             }
 
             @Override
-            MemberValue<?> newMemberValue(Object value, Object def, Class<?> type) {
+            MemberValue<?> newMemberValueWithValueAndDefault(Object value, Object def, Class<?> type) {
                 return new AnnotationArrayMemberValue<>((Annotation[]) value, (Annotation[]) def, (Class<Annotation[]>) type);
             }
         },
         BOOLEAN {
 
             @Override
-            boolean isValueType(Object value, Object def, Class<?> type) {
+            boolean isValueType(Class<?> type) {
                 return boolean.class.equals(type);
             }
 
             @Override
-            MemberValue<?> newMemberValue(Object value, Object def, Class<?> type) {
+            MemberValue<?> newMemberValueWithValueAndDefault(Object value, Object def, Class<?> type) {
                 return new BooleanMemberValue((boolean) value, (boolean) def);
+            }
+
+            @Override
+            MemberValue<?> newMemberValueWithValue(Object value, Class<?> type) {
+                return new BooleanMemberValue((boolean) value);
+            }
+
+            @Override
+            MemberValue<?> newMemberValueWithoutValueOrDefault(Class<?> type) {
+                return new BooleanMemberValue();
             }
         },
         BOOLEAN_ARRAY {
 
             @Override
-            boolean isValueType(Object value, Object def, Class<?> type) {
+            boolean isValueType(Class<?> type) {
                 return boolean[].class.equals(type);
             }
 
             @Override
-            MemberValue<?> newMemberValue(Object value, Object def, Class<?> type) {
+            MemberValue<?> newMemberValueWithValueAndDefault(Object value, Object def, Class<?> type) {
                 return new BooleanArrayMemberValue((boolean[]) value, (boolean[]) def);
             }
         },
         BYTE {
 
             @Override
-            boolean isValueType(Object value, Object def, Class<?> type) {
+            boolean isValueType(Class<?> type) {
                 return byte.class.equals(type);
             }
 
             @Override
-            MemberValue<?> newMemberValue(Object value, Object def, Class<?> type) {
+            MemberValue<?> newMemberValueWithValueAndDefault(Object value, Object def, Class<?> type) {
                 return new ByteMemberValue((byte) value, (byte) def);
+            }
+
+            @Override
+            MemberValue<?> newMemberValueWithValue(Object value, Class<?> type) {
+                return new ByteMemberValue((byte) value);
+            }
+
+            @Override
+            MemberValue<?> newMemberValueWithoutValueOrDefault(Class<?> type) {
+                return new ByteMemberValue();
             }
         },
         BYTE_ARRAY {
 
             @Override
-            boolean isValueType(Object value, Object def, Class<?> type) {
+            boolean isValueType(Class<?> type) {
                 return byte[].class.equals(type);
             }
 
             @Override
-            MemberValue<?> newMemberValue(Object value, Object def, Class<?> type) {
+            MemberValue<?> newMemberValueWithValueAndDefault(Object value, Object def, Class<?> type) {
                 return new ByteArrayMemberValue((byte[]) value, (byte[]) def);
             }
         },
         CHAR {
 
             @Override
-            boolean isValueType(Object value, Object def, Class<?> type) {
+            boolean isValueType(Class<?> type) {
                 return char.class.equals(type);
             }
 
             @Override
-            MemberValue<?> newMemberValue(Object value, Object def, Class<?> type) {
+            MemberValue<?> newMemberValueWithValueAndDefault(Object value, Object def, Class<?> type) {
                 return new CharMemberValue((char) value, (char) def);
+            }
+
+            @Override
+            MemberValue<?> newMemberValueWithValue(Object value, Class<?> type) {
+                return new CharMemberValue((char) value);
+            }
+
+            @Override
+            MemberValue<?> newMemberValueWithoutValueOrDefault(Class<?> type) {
+                return new CharMemberValue();
             }
         },
         CHAR_ARRAY {
 
             @Override
-            boolean isValueType(Object value, Object def, Class<?> type) {
+            boolean isValueType(Class<?> type) {
                 return char[].class.equals(type);
             }
 
             @Override
-            MemberValue<?> newMemberValue(Object value, Object def, Class<?> type) {
+            MemberValue<?> newMemberValueWithValueAndDefault(Object value, Object def, Class<?> type) {
                 return new CharArrayMemberValue((char[]) value, (char[]) def);
             }
         },
         CLASS {
 
             @Override
-            boolean isValueType(Object value, Object def, Class<?> type) {
-                return type != null && Class.class.equals(type);
+            boolean isValueType(Class<?> type) {
+                return Class.class.equals(type);
             }
 
             @Override
-            MemberValue<?> newMemberValue(Object value, Object def, Class<?> type) {
+            MemberValue<?> newMemberValueWithValueAndDefault(Object value, Object def, Class<?> type) {
                 return new ClassMemberValue((Class<?>) value, (Class<?>) def);
             }
         },
         CLASS_ARRAY {
 
             @Override
-            boolean isValueType(Object value, Object def, Class<?> type) {
-                return type != null && type.isArray() && Class.class.equals(type.getComponentType());
+            boolean isValueType(Class<?> type) {
+                return type.isArray() && Class.class.equals(type.getComponentType());
             }
 
             @Override
-            MemberValue<?> newMemberValue(Object value, Object def, Class<?> type) {
+            MemberValue<?> newMemberValueWithValueAndDefault(Object value, Object def, Class<?> type) {
                 return new ClassArrayMemberValue((Class<?>[]) value, (Class<?>[]) def);
             }
         },
         DOUBLE {
 
             @Override
-            boolean isValueType(Object value, Object def, Class<?> type) {
+            boolean isValueType(Class<?> type) {
                 return double.class.equals(type);
             }
 
             @Override
-            MemberValue<?> newMemberValue(Object value, Object def, Class<?> type) {
+            MemberValue<?> newMemberValueWithValueAndDefault(Object value, Object def, Class<?> type) {
                 return new DoubleMemberValue((double) value, (double) def);
+            }
+
+            @Override
+            MemberValue<?> newMemberValueWithValue(Object value, Class<?> type) {
+                return new DoubleMemberValue((double) value);
+            }
+
+            @Override
+            MemberValue<?> newMemberValueWithoutValueOrDefault(Class<?> type) {
+                return new DoubleMemberValue();
             }
         },
         DOUBLE_ARRAY {
 
             @Override
-            boolean isValueType(Object value, Object def, Class<?> type) {
+            boolean isValueType(Class<?> type) {
                 return double[].class.equals(type);
             }
 
             @Override
-            MemberValue<?> newMemberValue(Object value, Object def, Class<?> type) {
+            MemberValue<?> newMemberValueWithValueAndDefault(Object value, Object def, Class<?> type) {
                 return new DoubleArrayMemberValue((double[]) value, (double[]) def);
             }
         },
         ENUM {
 
             @Override
-            boolean isValueType(Object value, Object def, Class<?> type) {
-                return type != null && type.isEnum();
+            boolean isValueType(Class<?> type) {
+                return type.isEnum();
             }
 
             @Override
-            MemberValue<?> newMemberValue(Object value, Object def, Class<?> type) {
+            MemberValue<?> newMemberValueWithValueAndDefault(Object value, Object def, Class<?> type) {
                 return new EnumMemberValue<>((Enum) value, (Enum) def, (Class<Enum>) type);
             }
         },
         ENUM_ARRAY {
 
             @Override
-            boolean isValueType(Object value, Object def, Class<?> type) {
-                return type != null && type.isArray() && type.getComponentType().isEnum();
+            boolean isValueType(Class<?> type) {
+                return type.isArray() && type.getComponentType().isEnum();
             }
 
             @Override
-            MemberValue<?> newMemberValue(Object value, Object def, Class<?> type) {
+            MemberValue<?> newMemberValueWithValueAndDefault(Object value, Object def, Class<?> type) {
                 return new EnumArrayMemberValue<>((Enum[]) value, (Enum[]) def, (Class<Enum[]>) type);
             }
         },
         FLOAT {
 
             @Override
-            boolean isValueType(Object value, Object def, Class<?> type) {
+            boolean isValueType(Class<?> type) {
                 return float.class.equals(type);
             }
 
             @Override
-            MemberValue<?> newMemberValue(Object value, Object def, Class<?> type) {
+            MemberValue<?> newMemberValueWithValueAndDefault(Object value, Object def, Class<?> type) {
                 return new FloatMemberValue((float) value, (float) def);
+            }
+
+            @Override
+            MemberValue<?> newMemberValueWithValue(Object value, Class<?> type) {
+                return new FloatMemberValue((float) value);
+            }
+
+            @Override
+            MemberValue<?> newMemberValueWithoutValueOrDefault(Class<?> type) {
+                return new FloatMemberValue();
             }
         },
         FLOAT_ARRAY {
 
             @Override
-            boolean isValueType(Object value, Object def, Class<?> type) {
+            boolean isValueType(Class<?> type) {
                 return float[].class.equals(type);
             }
 
             @Override
-            MemberValue<?> newMemberValue(Object value, Object def, Class<?> type) {
+            MemberValue<?> newMemberValueWithValueAndDefault(Object value, Object def, Class<?> type) {
                 return new FloatArrayMemberValue((float[]) value, (float[]) def);
             }
         },
         INT {
 
             @Override
-            boolean isValueType(Object value, Object def, Class<?> type) {
+            boolean isValueType(Class<?> type) {
                 return int.class.equals(type);
             }
 
             @Override
-            MemberValue<?> newMemberValue(Object value, Object def, Class<?> type) {
+            MemberValue<?> newMemberValueWithValueAndDefault(Object value, Object def, Class<?> type) {
                 return new IntMemberValue((int) value, (int) def);
+            }
+
+            @Override
+            MemberValue<?> newMemberValueWithValue(Object value, Class<?> type) {
+                return new IntMemberValue((int) value);
+            }
+
+            @Override
+            MemberValue<?> newMemberValueWithoutValueOrDefault(Class<?> type) {
+                return new IntMemberValue();
             }
         },
         INT_ARRAY {
 
             @Override
-            boolean isValueType(Object value, Object def, Class<?> type) {
+            boolean isValueType(Class<?> type) {
                 return int[].class.equals(type);
             }
 
             @Override
-            MemberValue<?> newMemberValue(Object value, Object def, Class<?> type) {
+            MemberValue<?> newMemberValueWithValueAndDefault(Object value, Object def, Class<?> type) {
                 return new IntArrayMemberValue((int[]) value, (int[]) def);
             }
         },
         LONG {
 
             @Override
-            boolean isValueType(Object value, Object def, Class<?> type) {
+            boolean isValueType(Class<?> type) {
                 return long.class.equals(type);
             }
 
             @Override
-            MemberValue<?> newMemberValue(Object value, Object def, Class<?> type) {
+            MemberValue<?> newMemberValueWithValueAndDefault(Object value, Object def, Class<?> type) {
                 return new LongMemberValue((long) value, (long) def);
+            }
+
+            @Override
+            MemberValue<?> newMemberValueWithValue(Object value, Class<?> type) {
+                return new LongMemberValue((long) value);
+            }
+
+            @Override
+            MemberValue<?> newMemberValueWithoutValueOrDefault(Class<?> type) {
+                return new LongMemberValue();
             }
         },
         LONG_ARRAY {
 
             @Override
-            boolean isValueType(Object value, Object def, Class<?> type) {
+            boolean isValueType(Class<?> type) {
                 return long[].class.equals(type);
             }
 
             @Override
-            MemberValue<?> newMemberValue(Object value, Object def, Class<?> type) {
+            MemberValue<?> newMemberValueWithValueAndDefault(Object value, Object def, Class<?> type) {
                 return new LongArrayMemberValue((long[]) value, (long[]) def);
             }
         },
         SHORT {
 
             @Override
-            boolean isValueType(Object value, Object def, Class<?> type) {
+            boolean isValueType(Class<?> type) {
                 return short.class.equals(type);
             }
 
             @Override
-            MemberValue<?> newMemberValue(Object value, Object def, Class<?> type) {
+            MemberValue<?> newMemberValueWithValueAndDefault(Object value, Object def, Class<?> type) {
                 return new ShortMemberValue((short) value, (short) def);
+            }
+
+            @Override
+            MemberValue<?> newMemberValueWithValue(Object value, Class<?> type) {
+                return new ShortMemberValue((short) value);
+            }
+
+            @Override
+            MemberValue<?> newMemberValueWithoutValueOrDefault(Class<?> type) {
+                return new ShortMemberValue();
             }
         },
         SHORT_ARRAY {
 
             @Override
-            boolean isValueType(Object value, Object def, Class<?> type) {
+            boolean isValueType(Class<?> type) {
                 return short[].class.equals(type);
             }
 
             @Override
-            MemberValue<?> newMemberValue(Object value, Object def, Class<?> type) {
+            MemberValue<?> newMemberValueWithValueAndDefault(Object value, Object def, Class<?> type) {
                 return new ShortArrayMemberValue((short[]) value, (short[]) def);
             }
         },
         STRING {
 
             @Override
-            boolean isValueType(Object value, Object def, Class<?> type) {
+            boolean isValueType(Class<?> type) {
                 return String.class.equals(type);
             }
 
             @Override
-            MemberValue<?> newMemberValue(Object value, Object def, Class<?> type) {
+            MemberValue<?> newMemberValueWithValueAndDefault(Object value, Object def, Class<?> type) {
                 return new StringMemberValue((String) value, (String) def);
             }
         },
         STRING_ARRAY {
 
             @Override
-            boolean isValueType(Object value, Object def, Class<?> type) {
+            boolean isValueType(Class<?> type) {
                 return String[].class.equals(type);
             }
 
             @Override
-            MemberValue<?> newMemberValue(Object value, Object def, Class<?> type) {
+            MemberValue<?> newMemberValueWithValueAndDefault(Object value, Object def, Class<?> type) {
                 return new StringArrayMemberValue((String[]) value, (String[]) def);
             }
         };
@@ -688,15 +855,32 @@ public final class AnnotationMap<A extends Annotation> {
             Object def = getAnnotationMemberDefault(annotationType, memberName);
             Object val = annotation != null ? getAnnotationMemberValue(annotation, memberName) : def;
             Class<?> type = getAnnotationMemberType(annotationType, memberName);
-            for (MemberValueFactory fac : values()) {
-                if (fac.isValueType(val, def, type)) return fac.newMemberValue(val, def, type);
+            if (type != null) {
+                for (MemberValueFactory fac : values()) {
+                    if (fac.isValueType(type)) return fac.newMemberValue(val, def, type);
+                }
             }
             throw new IllegalArgumentException(String.format("Unsupported annotation member type: '%s'", type));
         }
 
-        abstract boolean isValueType(Object value, Object def, Class<?> type);
+        abstract boolean isValueType(Class<?> type);
 
-        abstract MemberValue<?> newMemberValue(Object value, Object def, Class<?> type);
+        abstract MemberValue<?> newMemberValueWithValueAndDefault(Object value, Object def, Class<?> type);
+
+        MemberValue<?> newMemberValueWithValue(Object value, Class<?> type) {
+            return newMemberValueWithValueAndDefault(value, null, type);
+        }
+
+        // not possible in actually annotation usage but necessary when creating map from annotation class
+        MemberValue<?> newMemberValueWithoutValueOrDefault(Class<?> type) {
+            return newMemberValueWithValueAndDefault(null, null, type);
+        }
+
+        // you can either have: a value AND a default; a value but NO default; neither value NOR default
+        // should never occur: a default but NO value
+        private MemberValue<?> newMemberValue(Object value, Object def, Class<?> type) {
+            return value != null && def != null ? newMemberValueWithValueAndDefault(value, def, type) : def == null && value != null ? newMemberValueWithValue(value, type) : newMemberValueWithoutValueOrDefault(type);
+        }
 
     }
 
@@ -803,7 +987,7 @@ public final class AnnotationMap<A extends Annotation> {
         joiner.setEmptyValue(EMPTY);
         if (members.containsKey("value")) {
             MemberValue<?> mv = members.get("value");
-            if (!mv.isDefault()) {
+            if (mv.isUndefined() || !mv.isDefault()) {
                 if (members.size() > 1 && members.entrySet().stream().filter(entry -> !"value".equals(entry.getKey())).anyMatch(entry -> !entry.getValue().isDefault())) {
                     joiner.add(String.format("value = %s", mv));
                 } else {
@@ -811,7 +995,7 @@ public final class AnnotationMap<A extends Annotation> {
                 }
             }
         }
-        members.entrySet().stream().filter(entry -> !"value".equals(entry.getKey()) && !entry.getValue().isDefault()).forEach(entry -> {
+        members.entrySet().stream().filter(entry -> !"value".equals(entry.getKey()) && (entry.getValue().isUndefined() || !entry.getValue().isDefault())).forEach(entry -> {
             joiner.add(String.format("%s = %s", entry.getKey(), entry.getValue()));
         });
         sb.append(joiner.toString());

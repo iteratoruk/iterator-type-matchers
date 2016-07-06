@@ -5,11 +5,12 @@ import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
-import iterator.Reflection;
 
 import java.lang.annotation.Annotation;
 
 import org.junit.Test;
+
+import iterator.Reflection;
 
 public class AnnotationMapTest {
 
@@ -528,6 +529,17 @@ public class AnnotationMapTest {
         String actual = map.toString();
         // then
         assertThat(actual, is("@TestAnnotationWithValue(\"bar\")"));
+    }
+
+    @Test
+    public void shouldHandleAbsenceOfDefaultWhenTooString() throws Exception {
+        // given
+        AnnotationMap<TestAnnotationWithoutDefaults> map = AnnotationMap.from(TestAnnotationWithoutDefaults.class);
+        // when
+        String actual = map.toString();
+        // then
+        String expected = String.format("@TestAnnotationWithoutDefaults(annotationArrayProperty = %1$s, annotationProperty = %1$s, booleanArrayProperty = %1$s, booleanProperty = %1$s, byteArrayProperty = %1$s, byteProperty = %1$s, charArrayProperty = %1$s, charProperty = %1$s, classArrayProperty = %1$s, classProperty = %1$s, doubleArrayProperty = %1$s, doubleProperty = %1$s, enumArrayProperty = %1$s, enumProperty = %1$s, floatArrayProperty = %1$s, floatProperty = %1$s, intArrayProperty = %1$s, intProperty = %1$s, longArrayProperty = %1$s, longProperty = %1$s, shortArrayProperty = %1$s, shortProperty = %1$s, stringArrayProperty = %1$s, stringProperty = %1$s)", "UNDEFINED");
+        assertThat(actual, is(expected));
     }
 
     private static <A extends Annotation> A anno(String fieldName, Class<A> annotationClass) {
