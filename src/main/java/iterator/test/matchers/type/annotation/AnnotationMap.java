@@ -121,13 +121,21 @@ public final class AnnotationMap<A extends Annotation> {
         @Override
         public String toString() {
             if (value == null) return super.toString();
-            StringJoiner joiner = new StringJoiner(COMMA, "{ ", " }");
+            StringJoiner joiner = getNewStringJoiner();
             Arrays.stream(value).forEach(val -> joiner.add(format(val)));
             return joiner.toString();
         }
 
         protected String format(T val) {
             return String.valueOf(val);
+        }
+
+        protected StringJoiner getNewStringJoiner() {
+            if (value == null) throw new IllegalStateException("No array value available to join");
+            String prefix = value.length > 0 ? "{ " : "{";
+            String suffix = value.length > 0 ? " }" : "}";
+            StringJoiner joiner = new StringJoiner(COMMA, prefix, suffix);
+            return joiner;
         }
 
     }
@@ -144,7 +152,7 @@ public final class AnnotationMap<A extends Annotation> {
         @Override
         public String toString() {
             if (value == null) return super.toString();
-            StringJoiner joiner = new StringJoiner(COMMA, "{ ", " }");
+            StringJoiner joiner = getNewStringJoiner();
             valueMaps.forEach(val -> joiner.add(val.toString()));
             return joiner.toString();
         }
@@ -897,15 +905,15 @@ public final class AnnotationMap<A extends Annotation> {
     }
 
     static String doubleQuoted(String str) {
-        return str != null ? String.format("\"%s\"", str) : String.valueOf(str);
+        return String.format("\"%s\"", str);
     }
 
     static String singleQuoted(Character ch) {
-        return ch != null ? String.format("'%s'", ch) : String.valueOf(ch);
+        return String.format("'%s'", ch);
     }
 
     static String suffixed(Object obj, String suffix) {
-        return obj != null ? String.format("%s%s", obj, suffix) : String.valueOf(obj);
+        return String.format("%s%s", obj, suffix);
     }
 
     private final Class<A> annotationClass;

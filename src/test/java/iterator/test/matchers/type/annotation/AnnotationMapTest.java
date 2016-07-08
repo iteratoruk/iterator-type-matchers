@@ -98,6 +98,9 @@ public class AnnotationMapTest {
     @TestAnnotationWithNullArrayDefault({ String.class, Integer.class, Boolean.class })
     private String annotationWithNullArrayDefault;
 
+    @TestAnnotationWithoutDefaults(annotationArrayProperty = {}, annotationProperty = @TestAnnotationWithValue("foo"), booleanArrayProperty = { true, false }, booleanProperty = true, byteArrayProperty = {}, byteProperty = 0, charArrayProperty = { 'a', 'b', 'c' }, charProperty = 'd', classArrayProperty = { String.class, Integer.class, Long.class }, classProperty = Object.class, doubleArrayProperty = { 0.0 }, doubleProperty = 42.24, enumArrayProperty = { MetasyntacticVariable.FOO }, enumProperty = MetasyntacticVariable.BAR, floatArrayProperty = { 24.42F }, floatProperty = 42.24F, intArrayProperty = { 1, 2, 3 }, intProperty = 42, longArrayProperty = { 3L, 2L, 1L }, longProperty = 4L, shortArrayProperty = { 7, 8, 9 }, shortProperty = 10, stringArrayProperty = { "foo", "bar", "baz" }, stringProperty = "quix")
+    private String annotationWithoutDefaults;
+
     @Test
     public void shouldReturnAnnotationClassWhenAnnotationMapOfAnnotationInstance() throws Exception {
         // given
@@ -532,13 +535,25 @@ public class AnnotationMapTest {
     }
 
     @Test
-    public void shouldHandleAbsenceOfDefaultWhenTooString() throws Exception {
+    public void shouldHandleAbsenceOfDefaultWhenToStringUsingFromAnnotationType() throws Exception {
         // given
         AnnotationMap<TestAnnotationWithoutDefaults> map = AnnotationMap.from(TestAnnotationWithoutDefaults.class);
         // when
         String actual = map.toString();
         // then
         String expected = String.format("@TestAnnotationWithoutDefaults(annotationArrayProperty = %1$s, annotationProperty = %1$s, booleanArrayProperty = %1$s, booleanProperty = %1$s, byteArrayProperty = %1$s, byteProperty = %1$s, charArrayProperty = %1$s, charProperty = %1$s, classArrayProperty = %1$s, classProperty = %1$s, doubleArrayProperty = %1$s, doubleProperty = %1$s, enumArrayProperty = %1$s, enumProperty = %1$s, floatArrayProperty = %1$s, floatProperty = %1$s, intArrayProperty = %1$s, intProperty = %1$s, longArrayProperty = %1$s, longProperty = %1$s, shortArrayProperty = %1$s, shortProperty = %1$s, stringArrayProperty = %1$s, stringProperty = %1$s)", "UNDEFINED");
+        assertThat(actual, is(expected));
+    }
+
+    @Test
+    public void shouldHandleAbsenceOfDefaultsWhenToStringUsingOfAnnotationInstance() throws Exception {
+        // given
+        TestAnnotationWithoutDefaults annotation = anno("annotationWithoutDefaults", TestAnnotationWithoutDefaults.class);
+        AnnotationMap<TestAnnotationWithoutDefaults> map = AnnotationMap.of(annotation);
+        // when
+        String actual = map.toString();
+        // then
+        String expected = "@TestAnnotationWithoutDefaults(annotationArrayProperty = {}, annotationProperty = @TestAnnotationWithValue(\"foo\"), booleanArrayProperty = { true, false }, booleanProperty = true, byteArrayProperty = {}, byteProperty = 0, charArrayProperty = { 'a', 'b', 'c' }, charProperty = 'd', classArrayProperty = { String.class, Integer.class, Long.class }, classProperty = Object.class, doubleArrayProperty = { 0.0 }, doubleProperty = 42.24, enumArrayProperty = { MetasyntacticVariable.FOO }, enumProperty = MetasyntacticVariable.BAR, floatArrayProperty = { 24.42f }, floatProperty = 42.24f, intArrayProperty = { 1, 2, 3 }, intProperty = 42, longArrayProperty = { 3, 2, 1 }, longProperty = 4, shortArrayProperty = { 7, 8, 9 }, shortProperty = 10, stringArrayProperty = { \"foo\", \"bar\", \"baz\" }, stringProperty = \"quix\")";
         assertThat(actual, is(expected));
     }
 
