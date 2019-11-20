@@ -1,4 +1,3 @@
-
 package iterator.test.matchers.type.annotation;
 
 import static java.lang.annotation.ElementType.FIELD;
@@ -9,12 +8,11 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-@Target({ METHOD, FIELD, TYPE })
+@Target({METHOD, FIELD, TYPE})
 @Retention(RUNTIME)
 public @interface TestAnnotationWithValue {
 
-    String value();
+  String value();
 
-    String anotherProperty() default "bar";
-
+  String anotherProperty() default "bar";
 }

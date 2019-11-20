@@ -1,4 +1,3 @@
-
 package iterator.test.matchers.type.annotation;
 
 import static java.lang.annotation.ElementType.FIELD;
@@ -8,56 +7,55 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-@Target({ METHOD, FIELD })
+@Target({METHOD, FIELD})
 @Retention(RUNTIME)
 public @interface TestAnnotationWithoutDefaults {
 
-    boolean[] booleanArrayProperty();
+  boolean[] booleanArrayProperty();
 
-    boolean booleanProperty();
+  boolean booleanProperty();
 
-    byte[] byteArrayProperty();
+  byte[] byteArrayProperty();
 
-    byte byteProperty();
+  byte byteProperty();
 
-    char[] charArrayProperty();
+  char[] charArrayProperty();
 
-    char charProperty();
+  char charProperty();
 
-    double[] doubleArrayProperty();
+  double[] doubleArrayProperty();
 
-    double doubleProperty();
+  double doubleProperty();
 
-    float[] floatArrayProperty();
+  float[] floatArrayProperty();
 
-    float floatProperty();
+  float floatProperty();
 
-    int[] intArrayProperty();
+  int[] intArrayProperty();
 
-    int intProperty();
+  int intProperty();
 
-    long[] longArrayProperty();
+  long[] longArrayProperty();
 
-    long longProperty();
+  long longProperty();
 
-    short[] shortArrayProperty();
+  short[] shortArrayProperty();
 
-    short shortProperty();
+  short shortProperty();
 
-    String[] stringArrayProperty();
+  String[] stringArrayProperty();
 
-    String stringProperty();
+  String stringProperty();
 
-    MetasyntacticVariable enumProperty();
+  MetasyntacticVariable enumProperty();
 
-    MetasyntacticVariable[] enumArrayProperty();
+  MetasyntacticVariable[] enumArrayProperty();
 
-    Class<?> classProperty();
+  Class<?> classProperty();
 
-    Class<?>[] classArrayProperty();
+  Class<?>[] classArrayProperty();
 
-    TestAnnotationWithValue annotationProperty();
+  TestAnnotationWithValue annotationProperty();
 
-    TestAnnotationWithValue[] annotationArrayProperty();
-
+  TestAnnotationWithValue[] annotationArrayProperty();
 }
