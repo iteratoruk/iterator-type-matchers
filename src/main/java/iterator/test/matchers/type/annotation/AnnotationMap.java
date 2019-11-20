@@ -38,6 +38,8 @@ import java.util.stream.Collectors;
 @SuppressWarnings({"unchecked", "rawtypes"})
 public final class AnnotationMap<A extends Annotation> {
 
+  private static final String VALUE = "value";
+
   public abstract static class MemberValue<T> {
 
     private static final String UNDEFINED = "UNDEFINED";
@@ -465,7 +467,7 @@ public final class AnnotationMap<A extends Annotation> {
     }
   }
 
-  private static enum MemberValueFactory {
+  private enum MemberValueFactory {
     ANNOTATION {
 
       @Override
@@ -986,12 +988,12 @@ public final class AnnotationMap<A extends Annotation> {
     sb.append(getAnnotationClass().getSimpleName());
     StringJoiner joiner = new StringJoiner(COMMA, "(", ")");
     joiner.setEmptyValue(EMPTY);
-    if (members.containsKey("value")) {
-      MemberValue<?> mv = members.get("value");
+    if (members.containsKey(VALUE)) {
+      MemberValue<?> mv = members.get(VALUE);
       if (mv.isUndefined() || !mv.isDefault()) {
         if (members.size() > 1
             && members.entrySet().stream()
-                .filter(entry -> !"value".equals(entry.getKey()))
+                .filter(entry -> !VALUE.equals(entry.getKey()))
                 .anyMatch(entry -> !entry.getValue().isDefault())) {
           joiner.add(String.format("value = %s", mv));
         } else {
@@ -1002,12 +1004,9 @@ public final class AnnotationMap<A extends Annotation> {
     members.entrySet().stream()
         .filter(
             entry ->
-                !"value".equals(entry.getKey())
+                !VALUE.equals(entry.getKey())
                     && (entry.getValue().isUndefined() || !entry.getValue().isDefault()))
-        .forEach(
-            entry -> {
-              joiner.add(String.format("%s = %s", entry.getKey(), entry.getValue()));
-            });
+        .forEach(entry -> joiner.add(String.format("%s = %s", entry.getKey(), entry.getValue())));
     sb.append(joiner.toString());
     return sb.toString();
   }
