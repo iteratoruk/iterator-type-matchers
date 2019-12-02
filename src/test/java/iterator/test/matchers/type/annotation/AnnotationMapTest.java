@@ -127,17 +127,17 @@ class AnnotationMapTest {
   private String annotationWithoutDefaults;
 
   @Test
-  void shouldReturnAnnotationClassWhenAnnotationMapOfAnnotationInstance() throws Exception {
+  void shouldReturnAnnotationClassWhenAnnotationMapOfAnnotationInstance() {
     // given
     TestAnnotationWithoutValue annotation = anno("annotated", TestAnnotationWithoutValue.class);
     // when
     AnnotationMap<TestAnnotationWithoutValue> map = AnnotationMap.of(annotation);
     // then
-    assertThat((Object) map.getAnnotationClass(), is((Object) TestAnnotationWithoutValue.class));
+    assertThat(map.getAnnotationClass(), is((Object) TestAnnotationWithoutValue.class));
   }
 
   @Test
-  void shouldReturnMemberNamesWhenAnnotationMapOfAnnotationInstance() throws Exception {
+  void shouldReturnMemberNamesWhenAnnotationMapOfAnnotationInstance() {
     // given
     TestAnnotationWithoutValue annotation = anno("annotated", TestAnnotationWithoutValue.class);
     // when
@@ -173,7 +173,7 @@ class AnnotationMapTest {
   }
 
   @Test
-  void shouldReturnStringMemberValueWhenAnnotationMapOfAnnotationInstance() throws Exception {
+  void shouldReturnStringMemberValueWhenAnnotationMapOfAnnotationInstance() {
     // given
     TestAnnotationWithoutValue annotation = anno("annotated", TestAnnotationWithoutValue.class);
     AnnotationMap<TestAnnotationWithoutValue> map = AnnotationMap.of(annotation);
@@ -186,8 +186,7 @@ class AnnotationMapTest {
   }
 
   @Test
-  void shouldReturnStringMemberNonDefaultValueWhenAnnotationMapOfAnnotationInstance()
-      throws Exception {
+  void shouldReturnStringMemberNonDefaultValueWhenAnnotationMapOfAnnotationInstance() {
     // given
     TestAnnotationWithoutValue annotation =
         anno("annotatedWithOverrides", TestAnnotationWithoutValue.class);
@@ -200,8 +199,7 @@ class AnnotationMapTest {
   }
 
   @Test
-  void shouldReturnStringMemberStringArrayValueWhenAnnotationMapOfAnnotationInstance()
-      throws Exception {
+  void shouldReturnStringMemberStringArrayValueWhenAnnotationMapOfAnnotationInstance() {
     // given
     TestAnnotationWithoutValue annotation = anno("annotated", TestAnnotationWithoutValue.class);
     AnnotationMap<TestAnnotationWithoutValue> map = AnnotationMap.of(annotation);
@@ -213,35 +211,28 @@ class AnnotationMapTest {
   }
 
   @Test
-  void shouldThrowGivenNonExistentMemberNameWhenGet() throws Exception {
+  void shouldThrowGivenNonExistentMemberNameWhenGet() {
     // given
     TestAnnotationWithoutValue annotation =
         anno("annotatedWithOverrides", TestAnnotationWithoutValue.class);
     AnnotationMap<TestAnnotationWithoutValue> map = AnnotationMap.of(annotation);
     // when
     assertThrows(
-        IllegalArgumentException.class,
-        () -> {
-          map.get("non existent member", String.class);
-        });
+        IllegalArgumentException.class, () -> map.get("non existent member", String.class));
   }
 
   @Test
-  void shouldThrowGivenIncorrectTypeWhenGet() throws Exception {
+  void shouldThrowGivenIncorrectTypeWhenGet() {
     // given
     TestAnnotationWithoutValue annotation =
         anno("annotatedWithOverrides", TestAnnotationWithoutValue.class);
     AnnotationMap<TestAnnotationWithoutValue> map = AnnotationMap.of(annotation);
     // when
-    assertThrows(
-        IllegalArgumentException.class,
-        () -> {
-          map.get("stringProperty", boolean.class);
-        });
+    assertThrows(IllegalArgumentException.class, () -> map.get("stringProperty", boolean.class));
   }
 
   @Test
-  void shouldUpdateMemberValueWhenSet() throws Exception {
+  void shouldUpdateMemberValueWhenSet() {
     // given
     TestAnnotationWithoutValue annotation =
         anno("annotatedWithOverrides", TestAnnotationWithoutValue.class);
@@ -255,49 +246,37 @@ class AnnotationMapTest {
   }
 
   @Test
-  void shouldThrowGivenNonExistentMemberNameWhenSet() throws Exception {
+  void shouldThrowGivenNonExistentMemberNameWhenSet() {
     // given
     TestAnnotationWithoutValue annotation =
         anno("annotatedWithOverrides", TestAnnotationWithoutValue.class);
     AnnotationMap<TestAnnotationWithoutValue> map = AnnotationMap.of(annotation);
     // when
-    assertThrows(
-        IllegalArgumentException.class,
-        () -> {
-          map.set("non existent member", "foo");
-        });
+    assertThrows(IllegalArgumentException.class, () -> map.set("non existent member", "foo"));
   }
 
   @Test
-  void shouldThrowGivenIncorrectTypeWhenSet() throws Exception {
+  void shouldThrowGivenIncorrectTypeWhenSet() {
     // given
     TestAnnotationWithoutValue annotation =
         anno("annotatedWithOverrides", TestAnnotationWithoutValue.class);
     AnnotationMap<TestAnnotationWithoutValue> map = AnnotationMap.of(annotation);
     // when
-    assertThrows(
-        IllegalArgumentException.class,
-        () -> {
-          map.set("stringProperty", true);
-        });
+    assertThrows(IllegalArgumentException.class, () -> map.set("stringProperty", true));
   }
 
   @Test
-  void shouldThrowGivenNullForNonNullableTypeWhenSet() throws Exception {
+  void shouldThrowGivenNullForNonNullableTypeWhenSet() {
     // given
     TestAnnotationWithoutValue annotation =
         anno("annotatedWithOverrides", TestAnnotationWithoutValue.class);
     AnnotationMap<TestAnnotationWithoutValue> map = AnnotationMap.of(annotation);
     // when
-    assertThrows(
-        IllegalArgumentException.class,
-        () -> {
-          map.set("booleanProperty", null);
-        });
+    assertThrows(IllegalArgumentException.class, () -> map.set("booleanProperty", null));
   }
 
   @Test
-  void shouldNotThrowGivenNullForNullableTypeWhenSet() throws Exception {
+  void shouldNotThrowGivenNullForNullableTypeWhenSet() {
     // given
     TestAnnotationWithoutValue annotation =
         anno("annotatedWithOverrides", TestAnnotationWithoutValue.class);
@@ -309,7 +288,7 @@ class AnnotationMapTest {
   }
 
   @Test
-  void shouldCreateAnnotationMapFromClass() throws Exception {
+  void shouldCreateAnnotationMapFromClass() {
     // given
     TestAnnotationWithoutValue annotation = anno("annotated", TestAnnotationWithoutValue.class);
     AnnotationMap<TestAnnotationWithoutValue> expected = AnnotationMap.of(annotation);
@@ -321,7 +300,7 @@ class AnnotationMapTest {
   }
 
   @Test
-  void shouldReturnAnnotationSyntaxWhenToString() throws Exception {
+  void shouldReturnAnnotationSyntaxWhenToString() {
     // given
     TestAnnotationWithoutValue annotation = anno("annotated", TestAnnotationWithoutValue.class);
     AnnotationMap<TestAnnotationWithoutValue> map = AnnotationMap.of(annotation);
@@ -332,7 +311,7 @@ class AnnotationMapTest {
   }
 
   @Test
-  void shouldReturnAnnotationSyntaxWithPropertyValueWhenToString() throws Exception {
+  void shouldReturnAnnotationSyntaxWithPropertyValueWhenToString() {
     // given
     TestAnnotationWithoutValue annotation =
         anno("annotatedWithOverrides", TestAnnotationWithoutValue.class);
@@ -344,7 +323,7 @@ class AnnotationMapTest {
   }
 
   @Test
-  void shouldReturnAnnotationSyntaxWithStringArrayPropertyValueWhenToString() throws Exception {
+  void shouldReturnAnnotationSyntaxWithStringArrayPropertyValueWhenToString() {
     // given
     TestAnnotationWithoutValue annotation =
         anno("stringArrayPropertySample", TestAnnotationWithoutValue.class);
@@ -358,8 +337,7 @@ class AnnotationMapTest {
   }
 
   @Test
-  void shouldReturnAnnotationSyntaxWithStringArrayPropertyValueGivenDefaultIsNullWhenToString()
-      throws Exception {
+  void shouldReturnAnnotationSyntaxWithStringArrayPropertyValueGivenDefaultIsNullWhenToString() {
     // given
     TestAnnotationWithNullArrayDefault annotation =
         anno("annotationWithNullArrayDefault", TestAnnotationWithNullArrayDefault.class);
@@ -373,7 +351,7 @@ class AnnotationMapTest {
   }
 
   @Test
-  void shouldReturnAnnotationSyntaxWithBooleanPropertyValueWhenToString() throws Exception {
+  void shouldReturnAnnotationSyntaxWithBooleanPropertyValueWhenToString() {
     // given
     TestAnnotationWithoutValue annotation =
         anno("booleanPropertySample", TestAnnotationWithoutValue.class);
@@ -385,7 +363,7 @@ class AnnotationMapTest {
   }
 
   @Test
-  void shouldReturnAnnotationSyntaxWithBooleanArrayPropertyValueWhenToString() throws Exception {
+  void shouldReturnAnnotationSyntaxWithBooleanArrayPropertyValueWhenToString() {
     // given
     TestAnnotationWithoutValue annotation =
         anno("booleanArrayPropertySample", TestAnnotationWithoutValue.class);
@@ -397,7 +375,7 @@ class AnnotationMapTest {
   }
 
   @Test
-  void shouldReturnAnnotationSyntaxWithBytePropertyValueWhenToString() throws Exception {
+  void shouldReturnAnnotationSyntaxWithBytePropertyValueWhenToString() {
     // given
     TestAnnotationWithoutValue annotation =
         anno("bytePropertySample", TestAnnotationWithoutValue.class);
@@ -409,7 +387,7 @@ class AnnotationMapTest {
   }
 
   @Test
-  void shouldReturnAnnotationSyntaxWithByteArrayPropertyValueWhenToString() throws Exception {
+  void shouldReturnAnnotationSyntaxWithByteArrayPropertyValueWhenToString() {
     // given
     TestAnnotationWithoutValue annotation =
         anno("byteArrayPropertySample", TestAnnotationWithoutValue.class);
@@ -421,7 +399,7 @@ class AnnotationMapTest {
   }
 
   @Test
-  void shouldReturnAnnotationSyntaxWithCharPropertyValueWhenToString() throws Exception {
+  void shouldReturnAnnotationSyntaxWithCharPropertyValueWhenToString() {
     // given
     TestAnnotationWithoutValue annotation =
         anno("charPropertySample", TestAnnotationWithoutValue.class);
@@ -433,7 +411,7 @@ class AnnotationMapTest {
   }
 
   @Test
-  void shouldReturnAnnotationSyntaxWithCharArrayPropertyValueWhenToString() throws Exception {
+  void shouldReturnAnnotationSyntaxWithCharArrayPropertyValueWhenToString() {
     // given
     TestAnnotationWithoutValue annotation =
         anno("charArrayPropertySample", TestAnnotationWithoutValue.class);
@@ -445,7 +423,7 @@ class AnnotationMapTest {
   }
 
   @Test
-  void shouldReturnAnnotationSyntaxWithDoublePropertyValueWhenToString() throws Exception {
+  void shouldReturnAnnotationSyntaxWithDoublePropertyValueWhenToString() {
     // given
     TestAnnotationWithoutValue annotation =
         anno("doublePropertySample", TestAnnotationWithoutValue.class);
@@ -457,7 +435,7 @@ class AnnotationMapTest {
   }
 
   @Test
-  void shouldReturnAnnotationSyntaxWithDoubleArrayPropertyValueWhenToString() throws Exception {
+  void shouldReturnAnnotationSyntaxWithDoubleArrayPropertyValueWhenToString() {
     // given
     TestAnnotationWithoutValue annotation =
         anno("doubleArrayPropertySample", TestAnnotationWithoutValue.class);
@@ -469,7 +447,7 @@ class AnnotationMapTest {
   }
 
   @Test
-  void shouldReturnAnnotationSyntaxWithFloatPropertyValueWhenToString() throws Exception {
+  void shouldReturnAnnotationSyntaxWithFloatPropertyValueWhenToString() {
     // given
     TestAnnotationWithoutValue annotation =
         anno("floatPropertySample", TestAnnotationWithoutValue.class);
@@ -481,7 +459,7 @@ class AnnotationMapTest {
   }
 
   @Test
-  void shouldReturnAnnotationSyntaxWithFloatArrayPropertyValueWhenToString() throws Exception {
+  void shouldReturnAnnotationSyntaxWithFloatArrayPropertyValueWhenToString() {
     // given
     TestAnnotationWithoutValue annotation =
         anno("floatArrayPropertySample", TestAnnotationWithoutValue.class);
@@ -493,7 +471,7 @@ class AnnotationMapTest {
   }
 
   @Test
-  void shouldReturnAnnotationSyntaxWithIntPropertyValueWhenToString() throws Exception {
+  void shouldReturnAnnotationSyntaxWithIntPropertyValueWhenToString() {
     // given
     TestAnnotationWithoutValue annotation =
         anno("intPropertySample", TestAnnotationWithoutValue.class);
@@ -505,7 +483,7 @@ class AnnotationMapTest {
   }
 
   @Test
-  void shouldReturnAnnotationSyntaxWitIntArrayPropertyValueWhenToString() throws Exception {
+  void shouldReturnAnnotationSyntaxWitIntArrayPropertyValueWhenToString() {
     // given
     TestAnnotationWithoutValue annotation =
         anno("intArrayPropertySample", TestAnnotationWithoutValue.class);
@@ -517,7 +495,7 @@ class AnnotationMapTest {
   }
 
   @Test
-  void shouldReturnAnnotationSyntaxWithLongPropertyValueWhenToString() throws Exception {
+  void shouldReturnAnnotationSyntaxWithLongPropertyValueWhenToString() {
     // given
     TestAnnotationWithoutValue annotation =
         anno("longPropertySample", TestAnnotationWithoutValue.class);
@@ -529,7 +507,7 @@ class AnnotationMapTest {
   }
 
   @Test
-  void shouldReturnAnnotationSyntaxWithLongArrayPropertyValueWhenToString() throws Exception {
+  void shouldReturnAnnotationSyntaxWithLongArrayPropertyValueWhenToString() {
     // given
     TestAnnotationWithoutValue annotation =
         anno("longArrayPropertySample", TestAnnotationWithoutValue.class);
@@ -541,7 +519,7 @@ class AnnotationMapTest {
   }
 
   @Test
-  void shouldReturnAnnotationSyntaxWithShortPropertyValueWhenToString() throws Exception {
+  void shouldReturnAnnotationSyntaxWithShortPropertyValueWhenToString() {
     // given
     TestAnnotationWithoutValue annotation =
         anno("shortPropertySample", TestAnnotationWithoutValue.class);
@@ -553,7 +531,7 @@ class AnnotationMapTest {
   }
 
   @Test
-  void shouldReturnAnnotationSyntaxWithShortArrayPropertyValueWhenToString() throws Exception {
+  void shouldReturnAnnotationSyntaxWithShortArrayPropertyValueWhenToString() {
     // given
     TestAnnotationWithoutValue annotation =
         anno("shortArrayPropertySample", TestAnnotationWithoutValue.class);
@@ -565,7 +543,7 @@ class AnnotationMapTest {
   }
 
   @Test
-  void shouldReturnAnnotationSyntaxWithEnumPropertyValueWhenToString() throws Exception {
+  void shouldReturnAnnotationSyntaxWithEnumPropertyValueWhenToString() {
     // given
     TestAnnotationWithoutValue annotation =
         anno("enumPropertySample", TestAnnotationWithoutValue.class);
@@ -577,7 +555,7 @@ class AnnotationMapTest {
   }
 
   @Test
-  void shouldReturnAnnotationSyntaxWithEnumArrayPropertyValueWhenToString() throws Exception {
+  void shouldReturnAnnotationSyntaxWithEnumArrayPropertyValueWhenToString() {
     // given
     TestAnnotationWithoutValue annotation =
         anno("enumArrayPropertySample", TestAnnotationWithoutValue.class);
@@ -592,7 +570,7 @@ class AnnotationMapTest {
   }
 
   @Test
-  void shouldReturnAnnotationSyntaxWithClassPropertyValueWhenToString() throws Exception {
+  void shouldReturnAnnotationSyntaxWithClassPropertyValueWhenToString() {
     // given
     TestAnnotationWithoutValue annotation =
         anno("classPropertySample", TestAnnotationWithoutValue.class);
@@ -604,7 +582,7 @@ class AnnotationMapTest {
   }
 
   @Test
-  void shouldReturnAnnotationSyntaxWithClassArrayPropertyValueWhenToString() throws Exception {
+  void shouldReturnAnnotationSyntaxWithClassArrayPropertyValueWhenToString() {
     // given
     TestAnnotationWithoutValue annotation =
         anno("classArrayPropertySample", TestAnnotationWithoutValue.class);
@@ -618,7 +596,7 @@ class AnnotationMapTest {
   }
 
   @Test
-  void shouldReturnAnnotationSyntaxWithAnnotationPropertyValueWhenToString() throws Exception {
+  void shouldReturnAnnotationSyntaxWithAnnotationPropertyValueWhenToString() {
     // given
     TestAnnotationWithoutValue annotation =
         anno("annotationPropertySample", TestAnnotationWithoutValue.class);
@@ -632,7 +610,7 @@ class AnnotationMapTest {
   }
 
   @Test
-  void shouldReturnAnnotationSyntaxWithAnnotationArrayPropertyValueWhenToString() throws Exception {
+  void shouldReturnAnnotationSyntaxWithAnnotationArrayPropertyValueWhenToString() {
     // given
     TestAnnotationWithoutValue annotation =
         anno("annotationArrayPropertySample", TestAnnotationWithoutValue.class);
@@ -647,7 +625,7 @@ class AnnotationMapTest {
   }
 
   @Test
-  void shouldReturnAnnotationSyntaxWithValueWhenToString() throws Exception {
+  void shouldReturnAnnotationSyntaxWithValueWhenToString() {
     // given
     TestAnnotationWithValue annotation = anno("annotationWithValue", TestAnnotationWithValue.class);
     AnnotationMap<TestAnnotationWithValue> map = AnnotationMap.of(annotation);
@@ -658,7 +636,7 @@ class AnnotationMapTest {
   }
 
   @Test
-  void shouldHandleAbsenceOfDefaultWhenToStringUsingFromAnnotationType() throws Exception {
+  void shouldHandleAbsenceOfDefaultWhenToStringUsingFromAnnotationType() {
     // given
     AnnotationMap<TestAnnotationWithoutDefaults> map =
         AnnotationMap.from(TestAnnotationWithoutDefaults.class);
@@ -673,7 +651,7 @@ class AnnotationMapTest {
   }
 
   @Test
-  void shouldHandleAbsenceOfDefaultsWhenToStringUsingOfAnnotationInstance() throws Exception {
+  void shouldHandleAbsenceOfDefaultsWhenToStringUsingOfAnnotationInstance() {
     // given
     TestAnnotationWithoutDefaults annotation =
         anno("annotationWithoutDefaults", TestAnnotationWithoutDefaults.class);

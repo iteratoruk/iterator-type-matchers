@@ -34,7 +34,6 @@ import java.util.StringJoiner;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
-// FIXME primitive annotation member default value can be null when no default specified
 @SuppressWarnings({"unchecked", "rawtypes"})
 public final class AnnotationMap<A extends Annotation> {
 
@@ -85,8 +84,8 @@ public final class AnnotationMap<A extends Annotation> {
       return reflectionHashCode(this);
     }
 
-    public boolean isDefault() {
-      return def != null && value != null && def.equals(value);
+    public boolean isNotDefault() {
+      return def == null || !def.equals(value);
     }
 
     public boolean isUndefined() {
@@ -114,8 +113,8 @@ public final class AnnotationMap<A extends Annotation> {
     }
 
     @Override
-    public boolean isDefault() {
-      return def == null && value == null || Arrays.equals(def, value);
+    public boolean isNotDefault() {
+      return (def != null || value != null) && !Arrays.equals(def, value);
     }
 
     @Override
@@ -871,11 +870,12 @@ public final class AnnotationMap<A extends Annotation> {
     // you can either have: a value AND a default; a value but NO default; neither value NOR default
     // should never occur: a default but NO value
     private MemberValue<?> newMemberValue(Object value, Object def, Class<?> type) {
-      return value != null && def != null
-          ? newMemberValueWithValueAndDefault(value, def, type)
-          : def == null && value != null
-              ? newMemberValueWithValue(value, type)
-              : newMemberValueWithoutValueOrDefault(type);
+      if (value != null && def != null) {
+        return newMemberValueWithValueAndDefault(value, def, type);
+      }
+      return def == null && value != null
+          ? newMemberValueWithValue(value, type)
+          : newMemberValueWithoutValueOrDefault(type);
     }
   }
 
@@ -990,11 +990,11 @@ public final class AnnotationMap<A extends Annotation> {
     joiner.setEmptyValue(EMPTY);
     if (members.containsKey(VALUE)) {
       MemberValue<?> mv = members.get(VALUE);
-      if (mv.isUndefined() || !mv.isDefault()) {
+      if (mv.isUndefined() || mv.isNotDefault()) {
         if (members.size() > 1
             && members.entrySet().stream()
                 .filter(entry -> !VALUE.equals(entry.getKey()))
-                .anyMatch(entry -> !entry.getValue().isDefault())) {
+                .anyMatch(entry -> entry.getValue().isNotDefault())) {
           joiner.add(String.format("value = %s", mv));
         } else {
           joiner.add(mv.toString());
@@ -1005,7 +1005,7 @@ public final class AnnotationMap<A extends Annotation> {
         .filter(
             entry ->
                 !VALUE.equals(entry.getKey())
-                    && (entry.getValue().isUndefined() || !entry.getValue().isDefault()))
+                    && (entry.getValue().isUndefined() || entry.getValue().isNotDefault()))
         .forEach(entry -> joiner.add(String.format("%s = %s", entry.getKey(), entry.getValue())));
     sb.append(joiner.toString());
     return sb.toString();
